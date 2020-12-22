@@ -63,6 +63,20 @@ Route::post('/transcribe', function (Request $request) {
     ];
 });
 
+Route::post('/gc-content', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/GcContent.py', $request->dna_string]);
+    $process->run();
+
+    // executes after the command finishes
+    if (!$process->isSuccessful()) {
+        throw new ProcessFailedException($process);
+    }
+
+    return [
+        'gc_content' => $process->getOutput()
+    ];
+});
+
 Route::post('/login', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
