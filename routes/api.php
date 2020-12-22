@@ -77,6 +77,18 @@ Route::post('/gc-content', function (Request $request) {
     ];
 });
 
+Route::post('/gc-content-subsec', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/GcContentSubsec.py', $request->dna_string, $request->window]);
+    $process->run();
+
+    // executes after the command finishes
+    if (!$process->isSuccessful()) {
+        throw new ProcessFailedException($process);
+    }
+
+    return json_decode($process->getOutput(), true);
+});
+
 Route::post('/login', function (Request $request) {
     $request->validate([
         'email' => 'required|email',

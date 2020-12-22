@@ -30,8 +30,8 @@ def gcContent(seq):
     return round((seq.count('C') + seq.count('G')) / len(seq) *  100)
 
 def gcContentSubsec(seq, k=20):
-    res = []
+    res = {}
     for i in range(0, len(seq) - k + 1,  k):
         subseq = seq[i:i + k]
-        res.append(gcContent(subseq))
+        res[subseq] = gcContent(subseq)
     return res
