@@ -27,7 +27,8 @@ def reverseComplement(seq):
     return ''.join([DNA_ReverseComplement[nuc] for nuc in seq])[::-1]
 
 def gcContent(seq):
-    return round((seq.count('C') + seq.count('G')) / len(seq) *  100)
+    return round(
+        ((seq.count('C') + seq.count('G')) / len(seq) *  100), 6)
 
 def gcContentSubsec(seq, k=20):
     res = {}
