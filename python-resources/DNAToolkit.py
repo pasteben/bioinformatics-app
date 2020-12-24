@@ -65,3 +65,32 @@ def translate_subseq(seq, k=20):
         }
         results.append(result)
     return results
+
+def codon_usage_single(seq, amino_acid):
+    tmpList = []
+    for i in range(0, len(seq)  - 2, 3):
+        if DNA_Codons[seq[i:i + 3]] == amino_acid:
+            tmpList.append(seq[i:i + 3])
+
+    freqDict = dict(collections.Counter(tmpList))
+    totalWeight = sum(freqDict.values())
+    for seq in freqDict:
+        freqDict[seq] = round(freqDict[seq] / totalWeight, 2)
+    return freqDict
+
+def codon_usage(seq):
+    result = {}
+    for codon in Codons:
+        result[codon] = codon_usage_single(seq, codon)
+    return result
+
+def codon_usage_subseq(seq, k=20):
+    results = []
+    for i in range(0, len(seq) - k + 1,  k):
+        subseq = seq[i:i + k]
+        result = {
+            "subsequence": subseq,
+            "codon_usage": codon_usage(subseq)
+        }
+        results.append(result)
+    return results

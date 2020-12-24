@@ -87,6 +87,18 @@ Route::post('/translate', function (Request $request) {
     return json_decode($process->getOutput(), true);
 });
 
+Route::post('/codon-usage', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/CodonUsage.py', base64_encode(json_encode($request->all()))]);
+    $process->run();
+
+    // executes after the command finishes
+    if (!$process->isSuccessful()) {
+        throw new ProcessFailedException($process);
+    }
+
+    return json_decode($process->getOutput(), true);
+});
+
 Route::post('/login', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
