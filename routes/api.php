@@ -64,21 +64,7 @@ Route::post('/transcribe', function (Request $request) {
 });
 
 Route::post('/gc-content', function (Request $request) {
-    $process = new Process(['python3', base_path().'/python-resources/GcContent.py', $request->dna_string]);
-    $process->run();
-
-    // executes after the command finishes
-    if (!$process->isSuccessful()) {
-        throw new ProcessFailedException($process);
-    }
-
-    return [
-        'gc_content' => $process->getOutput()
-    ];
-});
-
-Route::post('/gc-content-subsec', function (Request $request) {
-    $process = new Process(['python3', base_path().'/python-resources/GcContentSubsec.py', $request->dna_string, $request->window]);
+    $process = new Process(['python3', base_path().'/python-resources/GcContent.py', base64_encode(json_encode($request->all()))]);
     $process->run();
 
     // executes after the command finishes
@@ -89,8 +75,8 @@ Route::post('/gc-content-subsec', function (Request $request) {
     return json_decode($process->getOutput(), true);
 });
 
-Route::post('/highest-gc-content', function (Request $request) {
-    $process = new Process(['python3', base_path().'/python-resources/HighestGcContent.py', $request->dataset]);
+Route::post('/gc-content-subsec', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/GcContentSubsec.py', $request->dna_string, $request->window]);
     $process->run();
 
     // executes after the command finishes
