@@ -23,18 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/count-nucleotides', function (Request $request) {
-    $process = new Process(['python3', base_path().'/python-resources/CountNucleotides.py', $request->dna_string]);
-    $process->run();
-
-    // executes after the command finishes
-    if (!$process->isSuccessful()) {
-        throw new ProcessFailedException($process);
-    }
-
-    return json_decode($process->getOutput(), true);
-});
-
 Route::post('/reverse-complement', function (Request $request) {
     $process = new Process(['python3', base_path().'/python-resources/ReverseComplement.py', $request->dna_string]);
     $process->run();
@@ -75,8 +63,20 @@ Route::post('/gc-content', function (Request $request) {
     return json_decode($process->getOutput(), true);
 });
 
-Route::post('/gc-content-subsec', function (Request $request) {
-    $process = new Process(['python3', base_path().'/python-resources/GcContentSubsec.py', $request->dna_string, $request->window]);
+Route::post('/count-nucleotides', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/CountNucleotides.py', base64_encode(json_encode($request->all()))]);
+    $process->run();
+
+    // executes after the command finishes
+    if (!$process->isSuccessful()) {
+        throw new ProcessFailedException($process);
+    }
+
+    return json_decode($process->getOutput(), true);
+});
+
+Route::post('/translate', function (Request $request) {
+    $process = new Process(['python3', base_path().'/python-resources/Translate.py', base64_encode(json_encode($request->all()))]);
     $process->run();
 
     // executes after the command finishes

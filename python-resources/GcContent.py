@@ -20,13 +20,32 @@ if "dataset" in content:
         else:
             FASTADict[FASTALabel] += line
 
-    RESULTDict =  {key: gcContent(value) for (key, value) in FASTADict.items()}
+    data = []
 
-    print(json.dumps(RESULTDict))
+    for (key, value) in FASTADict.items():
+        result = {
+            "label": key,
+            "sequence": value
+        }
+        if "window" in content:
+            result["gc_content"] = gcContentSubsec(value, int(content["window"]))
+        else:
+            result["gc_content"] = gcContent(value)
 
-if "dna_string" in content:
-    DNAStr = validateSeq(content["dna_string"])
+        data.append(result)
 
-    RESULTDict =  {"gc_content":  gcContent(DNAStr)}
+if "sequence" in content:
+    sequence = validateSeq(content["sequence"])
 
-    print(json.dumps(RESULTDict))
+    data = {
+        "sequence": sequence
+    }
+
+    if "window" in content:
+        data["gc_content"] = gcContentSubsec(sequence, int(content["window"]))
+    else:
+        data["gc_content"] = gcContent(sequence)
+
+print(json.dumps({
+    "data": data
+}))

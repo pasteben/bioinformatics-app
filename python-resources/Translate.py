@@ -28,9 +28,9 @@ if "dataset" in content:
             "sequence": value
         }
         if "window" in content:
-            result["nucleotide_count"] = countNucFrequencySubsec(value, int(content["window"]))
+            result["amino_acid_sequence"] = translate_subseq(value, int(content["window"]))
         else:
-            result["nucleotide_count"] = countNucFrequency(value)
+            result["amino_acid_sequence"] = translate_seq(value)
 
         data.append(result)
 
@@ -42,9 +42,9 @@ if "sequence" in content:
     }
 
     if "window" in content:
-        data["count"] = countNucFrequencySubsec(sequence, int(content["window"]))
+        data["amino_acid_sequence"] = translate_subseq(sequence, int(content["window"]))
     else:
-        data["count"] = countNucFrequency(sequence)
+        data["amino_acid_sequence"] = translate_seq(sequence)
 
 print(json.dumps({
     "data": data
